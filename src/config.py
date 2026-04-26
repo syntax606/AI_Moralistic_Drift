@@ -4,9 +4,9 @@ from typing import Dict, List, Tuple
 
 # ── Models ─────────────────────────────────────────────────────────────
 MODEL_SPECS: List[Tuple[str, str]] = [
-    ("model_a", "REPLACE_WITH_HF_MODEL_ID_A"),
-    ("model_b", "REPLACE_WITH_HF_MODEL_ID_B"),
-    ("model_c", "REPLACE_WITH_HF_MODEL_ID_C"),
+    ("llama3_8b",   "meta-llama/Meta-Llama-3-8B-Instruct"),
+    ("mistral_7b",  "mistralai/Mistral-7B-Instruct-v0.2"),
+    ("qwen2_5_7b",  "Qwen/Qwen2.5-7B-Instruct"),
 ]
 
 # ── Experimental design ─────────────────────────────────────────────────
