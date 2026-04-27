@@ -1,6 +1,6 @@
 # project/src/generate.py
 from __future__ import annotations
-import gc, hashlib, json, time
+import argparse, gc, hashlib, json, time
 from pathlib import Path
 from typing import List, Dict
 
@@ -13,7 +13,8 @@ from src.prompt_schema import (
 )
 from src.models_chat import HFChatModel
 
-def run(out_path="data/generations.jsonl"):
+
+def run(out_path="data/generations.jsonl", pilot=False):
 
     Path(out_path).parent.mkdir(parents=True, exist_ok=True)
 
@@ -21,10 +22,30 @@ def run(out_path="data/generations.jsonl"):
     for f in SCRIPTS_FILES:
         scripts += [json.loads(l) for l in Path(f).read_text().splitlines() if l]
 
+    if pilot:
+        # One script per domain, first model only, run 1 only.
+        # All orders and history modes are kept so the full pipeline
+        # (metrics, stats, plots) can run on the pilot output.
+        seen_domains = set()
+        pilot_scripts = []
+        for s in scripts:
+            if s["domain"] not in seen_domains:
+                pilot_scripts.append(s)
+                seen_domains.add(s["domain"])
+        scripts     = pilot_scripts
+        model_specs = MODEL_SPECS[:1]
+        run_ids     = [1]
+        print(f"[pilot] {len(scripts)} scripts × 1 model × {len(ORDERS)} orders "
+              f"× {len(HISTORY_MODES)} history modes × 1 run "
+              f"= {len(scripts) * len(ORDERS) * len(HISTORY_MODES) * len(FORWARD_PATH)} rows")
+    else:
+        model_specs = MODEL_SPECS
+        run_ids     = RUN_IDS
+
     with open(out_path, "a", encoding="utf-8") as fh:
 
-        for run_id in RUN_IDS:
-            for short, model_id in MODEL_SPECS:
+        for run_id in run_ids:
+            for short, model_id in model_specs:
 
                 model = HFChatModel(model_id)
 
@@ -48,9 +69,6 @@ def run(out_path="data/generations.jsonl"):
                                         prompt = render_commitment_prompt(script, int(step[1]))
                                         step_type = "commitment"
 
-                                    # Fix #3: use render_messages_from_history for both modes.
-                                    # In no_history mode history stays [], so this correctly
-                                    # sends only [system, user] each turn.
                                     messages = render_messages_from_history(
                                         history if history_mode == "history" else [],
                                         prompt
@@ -87,3 +105,13 @@ def run(out_path="data/generations.jsonl"):
                 finally:
                     model.unload()
                     gc.collect()
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--pilot", action="store_true",
+                        help="Run a minimal slice: 1 script/domain, 1 model, 1 run")
+    parser.add_argument("--out", default="data/generations.jsonl")
+    args = parser.parse_args()
+
+    run(out_path=args.out, pilot=args.pilot)
