@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List, Tuple
 
 import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
 
 # ───────────────────────────────────────────────────────────────────────
@@ -44,10 +44,11 @@ class HFChatModel:
             "torch_dtype": get_best_dtype()
         }
 
-        # Optional 4-bit loading
+        # Optional 4-bit loading via BitsAndBytesConfig
         if self.load_in_4bit:
             try:
-                model_kwargs["load_in_4bit"] = True
+                model_kwargs["quantization_config"] = BitsAndBytesConfig(load_in_4bit=True)
+                model_kwargs.pop("torch_dtype", None)
                 print("[HFChatModel] Using 4-bit quantization")
             except Exception:
                 print("[HFChatModel] 4-bit unavailable, falling back")
