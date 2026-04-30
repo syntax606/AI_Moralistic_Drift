@@ -46,13 +46,13 @@ def prepare_design_matrix(df: pd.DataFrame):
     X = pd.get_dummies(
         df[["C", "order", "history_mode", "domain"]],
         drop_first=True
-    )
+    ).astype(float)
 
     # Fix #4: add C×order interaction to test H3 (path dependence) in the
     # ordinal stance model, not just in the OLS drift models.
     order_cols = [c for c in X.columns if c.startswith("order_")]
     for col in order_cols:
-        X[f"C_x_{col}"] = df["C"].values * X[col].astype(float).values
+        X[f"C_x_{col}"] = df["C"].values * X[col].values
 
     y = df["score"].astype(int)
 
