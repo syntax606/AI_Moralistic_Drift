@@ -34,7 +34,7 @@ def add_commitment(df):
         return int(step[1])
 
     df = df.copy()
-    df["C"] = df["step"].apply(extract_c)
+    df["commitment"] = df["step"].apply(extract_c).astype(int)
 
     return df
 
@@ -48,7 +48,7 @@ def model_deviation(turn_df):
     turn_df = add_commitment(turn_df)
 
     model = smf.ols(
-        "deviation ~ C + C(order) + C(history_mode) + C(domain)",
+        "deviation ~ commitment + C(order) + C(history_mode) + C(domain)",
         data=turn_df
     ).fit()
 
@@ -64,7 +64,7 @@ def model_shift(turn_df):
     turn_df = add_commitment(turn_df)
 
     model = smf.ols(
-        "shift ~ C + C(order) + C(history_mode) + C(domain)",
+        "shift ~ commitment + C(order) + C(history_mode) + C(domain)",
         data=turn_df
     ).fit()
 
@@ -81,7 +81,7 @@ def model_path_dependence(turn_df):
     turn_df = add_commitment(turn_df)
 
     model = smf.ols(
-        "shift ~ C * C(order) + C(history_mode) + C(domain)",
+        "shift ~ commitment * C(order) + C(history_mode) + C(domain)",
         data=turn_df
     ).fit()
 
@@ -116,7 +116,7 @@ def model_history_effect(turn_df):
     turn_df = add_commitment(turn_df)
 
     model = smf.ols(
-        "deviation ~ C * C(history_mode) + C(order) + C(domain)",
+        "deviation ~ commitment * C(history_mode) + C(order) + C(domain)",
         data=turn_df
     ).fit()
 
