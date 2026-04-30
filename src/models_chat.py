@@ -1,6 +1,6 @@
 # project/src/models_chat.py
 from __future__ import annotations
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, Dict, List, Tuple
 
 import torch
@@ -25,6 +25,7 @@ def get_best_dtype():
 class HFChatModel:
     model_id: str
     load_in_4bit: bool = True
+    template_kwargs: Dict = field(default_factory=dict)
 
     def __post_init__(self):
 
@@ -67,7 +68,8 @@ class HFChatModel:
             return self.tokenizer.apply_chat_template(
                 messages,
                 tokenize=False,
-                add_generation_prompt=True
+                add_generation_prompt=True,
+                **self.template_kwargs
             )
         except Exception:
             return self._fallback_render(messages)

@@ -4,7 +4,11 @@ import argparse, gc, hashlib, json, time
 from pathlib import Path
 from typing import List, Dict
 
-from src.config import *
+from src.config import (
+    SCRIPTS_FILES, MODEL_SPECS, MODEL_TEMPLATE_KWARGS,
+    ORDERS, FORWARD_PATH, REVERSE_PATH, HISTORY_MODES, RUN_IDS,
+    DOMAIN_RULE_PROMPTS, GEN_PRIMARY,
+)
 from src.prompt_schema import (
     SYSTEM_MSG,
     render_rule_prompt,
@@ -47,7 +51,10 @@ def run(out_path="data/generations.jsonl", pilot=False):
         for run_id in run_ids:
             for short, model_id in model_specs:
 
-                model = HFChatModel(model_id)
+                model = HFChatModel(
+                    model_id,
+                    template_kwargs=MODEL_TEMPLATE_KWARGS.get(short, {})
+                )
 
                 try:
                     for script in scripts:

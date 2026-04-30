@@ -6,8 +6,15 @@ from typing import Dict, List, Tuple
 MODEL_SPECS: List[Tuple[str, str]] = [
     ("llama3_1_8b", "meta-llama/Meta-Llama-3.1-8B-Instruct"),
     ("gemma2_9b",   "google/gemma-2-9b-it"),
-    ("qwen2_5_7b",  "Qwen/Qwen2.5-7B-Instruct"),
+    ("qwen3_8b",    "Qwen/Qwen3-8B"),
 ]
+
+# Per-model kwargs forwarded to apply_chat_template.
+# Qwen3 defaults to thinking mode (chain-of-thought); disable it so
+# responses follow the structured output format directly.
+MODEL_TEMPLATE_KWARGS: Dict[str, Dict] = {
+    "qwen3_8b": {"enable_thinking": False},
+}
 
 # ── Experimental design ─────────────────────────────────────────────────
 ORDERS = ["forward", "reverse"]
