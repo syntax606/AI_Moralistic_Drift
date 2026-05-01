@@ -1,0 +1,30 @@
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                    ndi   R-squared:                       0.281
+Model:                            OLS   Adj. R-squared:                 -0.050
+Method:                 Least Squares   F-statistic:                    0.8478
+Date:                Fri, 01 May 2026   Prob (F-statistic):              0.556
+Time:                        11:44:16   Log-Likelihood:                -6.7505
+No. Observations:                  20   AIC:                             27.50
+Df Residuals:                      13   BIC:                             34.47
+Df Model:                           6                                         
+Covariance Type:            nonrobust                                         
+=================================================================================================
+                                    coef    std err          t      P>|t|      [0.025      0.975]
+-------------------------------------------------------------------------------------------------
+Intercept                         0.1500      0.249      0.603      0.557      -0.388       0.688
+C(order)[T.reverse]               0.2000      0.188      1.063      0.307      -0.206       0.606
+C(history_mode)[T.no_history]  1.665e-16      0.188   8.85e-16      1.000      -0.406       0.406
+C(domain)[T.deception]            0.2500      0.297      0.841      0.416      -0.393       0.893
+C(domain)[T.duty]              2.521e-16      0.297   8.48e-16      1.000      -0.643       0.643
+C(domain)[T.epistemic]           -0.2500      0.297     -0.841      0.416      -0.893       0.393
+C(domain)[T.manipulation]        -0.2500      0.297     -0.841      0.416      -0.893       0.393
+==============================================================================
+Omnibus:                        1.598   Durbin-Watson:                   3.032
+Prob(Omnibus):                  0.450   Jarque-Bera (JB):                1.213
+Skew:                           0.577   Prob(JB):                        0.545
+Kurtosis:                       2.647   Cond. No.                         7.18
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
