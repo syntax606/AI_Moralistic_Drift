@@ -2,22 +2,8 @@
 %  Normative Drift Under Agentic Commitment in Multi-Turn Dialogue
 %  ACL-style submission draft
 %
-%  CITATION KEYS — fill these with your verified sources:
-%
-%  \citep{ouyang2022training}      Ouyang et al. 2022 — InstructGPT / RLHF
-%  \citep{bai2022constitutional}   Bai et al. 2022 — Constitutional AI
-%  \citep{freedman1966compliance}  Freedman & Fraser 1966 — foot-in-the-door
-%  \citep{SYCOPHANCY_ORIG}         Original characterisation of sycophancy in RLHF models [VERIFY]
-%  \citep{SYCOPHANCY_MULTI}        Multi-turn sycophancy measurement [VERIFY: Hong et al. 2025 SYCON]
-%  \citep{SYCOPHANCY_TYPES}        Progressive vs. regressive sycophancy [VERIFY]
-%  \citep{FITD_LLM}                Foot-in-the-door applied to LLM jailbreaking [VERIFY]
-%  \citep{ORDER_EFFECTS_LLM}       Order effects in LLM moral reasoning [VERIFY: van2025deliberative]
-%  \citep{ANCHORING_LLM}           Anchoring effects in LLMs [VERIFY]
-%  \citep{MORAL_DOMAINS}           Domain variation in LLM moral reasoning [VERIFY]
-%  \citep{LLAMA31}                 Meta Llama 3.1 technical report
-%  \citep{GEMMA2}                  Google Gemma 2 technical report
-%  \citep{QWEN3}                   Qwen3 technical report
-%  \citep{RLHF_STABILITY}          RLHF and positional rigidity [VERIFY]
+%  All citation keys verified from PDF metadata.
+%  See paper/references.bib for full entries.
 % ============================================================
 
 \documentclass[11pt]{article}
@@ -48,7 +34,7 @@ We study \emph{normative drift}---change in explicit moral evaluation across tur
 \section{Introduction}
 % ============================================================
 
-Large language models are increasingly deployed in multi-turn conversational settings where cumulative context shapes output. A central concern in alignment research is whether such systems maintain coherent positions under conversational pressure, or whether prior outputs, user disagreement, and escalating framing can induce systematic change \citep{ouyang2022training, SYCOPHANCY_ORIG}. The phenomenon of \emph{sycophancy}---adjusting outputs to match perceived user preferences even at the cost of accuracy---has been documented as a consequence of reinforcement learning from human feedback (RLHF), but evidence for its scope and limits remains mixed. Some studies report high rates of stance change under disagreement \citep{SYCOPHANCY_MULTI}; others find selective agreement and positional rigidity \citep{RLHF_STABILITY, ORDER_EFFECTS_LLM}.
+Large language models are increasingly deployed in multi-turn conversational settings where cumulative context shapes output. A central concern in alignment research is whether such systems maintain coherent positions under conversational pressure, or whether prior outputs, user disagreement, and escalating framing can induce systematic change \citep{ouyang2022training, perez2022discovering}. The phenomenon of \emph{sycophancy}---adjusting outputs to match perceived user preferences even at the cost of accuracy---has been documented as a consequence of reinforcement learning from human feedback (RLHF), but evidence for its scope and limits remains mixed. Some studies report high rates of stance change under disagreement \citep{fanous2025syceval}; others find selective agreement and positional rigidity \citep{cau2025selective, sachdeva2025deliberative}.
 
 Two limitations constrain existing work. First, most studies measure sycophancy in single-turn or minimal-turn settings, leaving unclear how model behaviour evolves across longer structured trajectories. Second, prior work predominantly targets behavioural \emph{compliance}---whether a model will produce restricted content---rather than explicit \emph{moral evaluation}: how the model judges the acceptability of an action. These are not equivalent. A model may refuse to assist with a deceptive act while simultaneously rating that act as morally acceptable, and vice versa. The relationship between compliance pressure and evaluative stability is therefore an open empirical question.
 
@@ -71,23 +57,23 @@ We find that this prediction is inverted: models become \emph{more} consistent w
 
 \subsection{Sycophancy and Positional Stability}
 
-Sycophancy in RLHF-trained models---the tendency to agree with user-expressed views even when incorrect---was characterised as a systematic training artefact by \citet{SYCOPHANCY_ORIG}, who showed that models alter factual and evaluative responses when users push back. Subsequent work demonstrates that argument strength influences agreement rates \citep{SYCOPHANCY_TYPES}, and that sequential exposure to opposing positions produces more capitulation than simultaneous presentation. Multi-turn evaluation benchmarks have extended this to longer trajectories, measuring how many turns a model can resist position change before flipping \citep{SYCOPHANCY_MULTI}.
+Sycophancy in RLHF-trained models---the tendency to agree with user-expressed views even when incorrect---was characterised as a systematic training artefact by \citet{perez2022discovering}, who showed that models alter factual and evaluative responses when users push back. Subsequent work demonstrates that argument strength influences agreement rates \citep{kaur2025echoes}, and that sequential exposure to opposing positions produces more capitulation than simultaneous presentation. Multi-turn evaluation benchmarks have extended this to longer trajectories, measuring how many turns a model can resist position change before flipping \citep{fanous2025syceval}.
 
-Against this, other work finds that models exhibit selective agreement rather than uniform capitulation, and that certain training configurations produce positional rigidity \citep{RLHF_STABILITY}. This unresolved tension motivates a design that tests a specific \emph{mechanism} of pressure---commitment escalation---rather than generic disagreement.
+Against this, other work finds that models exhibit selective agreement rather than uniform capitulation, and that certain training configurations produce positional rigidity \citep{cau2025selective}. This unresolved tension motivates a design that tests a specific \emph{mechanism} of pressure---commitment escalation---rather than generic disagreement.
 
 \subsection{Commitment, Escalation, and Order Effects}
 
-The foot-in-the-door technique \citep{freedman1966compliance} demonstrates in human subjects that small initial commitments increase compliance with larger subsequent requests. This dynamic has been applied to multi-turn jailbreaking, where harmful intent is introduced incrementally over multiple turns to erode safety refusals \citep{FITD_LLM}. Our work extends this frame to explicit moral evaluation: does the same escalation logic operate when the model is asked to \emph{judge} rather than \emph{perform} an action?
+The foot-in-the-door technique \citep{freedman1966compliance} demonstrates in human subjects that small initial commitments increase compliance with larger subsequent requests. This dynamic has been applied to multi-turn jailbreaking, where harmful intent is introduced incrementally over multiple turns to erode safety refusals \citep{weng2025fitd}. Our work extends this frame to explicit moral evaluation: does the same escalation logic operate when the model is asked to \emph{judge} rather than \emph{perform} an action?
 
-Order effects in LLM moral reasoning have been documented independently: deliberation format and information sequence shape moral verdicts \citep{ORDER_EFFECTS_LLM}, consistent with primacy and recency effects in human judgment. Our forward/reverse trajectory design tests whether order effects persist in a fully controlled commitment trajectory.
+Order effects in LLM moral reasoning have been documented independently: deliberation format and information sequence shape moral verdicts \citep{sachdeva2025deliberative}, consistent with primacy and recency effects in human judgment \citep{hogarth1992order}. Our forward/reverse trajectory design tests whether order effects persist in a fully controlled commitment trajectory.
 
 \subsection{Moral Cognition and Domain Variation}
 
-LLMs demonstrate measurable moral reasoning capabilities, but responses vary across moral domains and scenario types \citep{MORAL_DOMAINS}. Constitutional AI approaches \citep{bai2022constitutional} introduce explicit normative principles into the training pipeline, yet how such constraints interact with conversational pressure remains unclear. Our five-domain design tests whether normative robustness is uniform across moral categories or domain-differentiated.
+LLMs demonstrate measurable moral reasoning capabilities, but responses vary across moral domains and scenario types \citep{huang2024moral}. Constitutional AI approaches \citep{bai2022constitutional} introduce explicit normative principles into the training pipeline, yet how such constraints interact with conversational pressure remains unclear. Our five-domain design tests whether normative robustness is uniform across moral categories or domain-differentiated.
 
 \subsection{Autoregressive Coherence}
 
-A less-studied force on model outputs is autoregressive coherence pressure: the constraint that each generated token conditions on all prior context, including the model's own previous outputs. When a model has committed to a position in prior turns, subsequent generation must be locally consistent with that prior. This mechanism predicts that conversational history should \emph{anchor} rather than destabilise outputs---a prediction we test directly through the history/no-history manipulation \citep{ANCHORING_LLM}.
+A less-studied force on model outputs is autoregressive coherence pressure: the constraint that each generated token conditions on all prior context, including the model's own previous outputs. When a model has committed to a position in prior turns, subsequent generation must be locally consistent with that prior. This mechanism predicts that conversational history should \emph{anchor} rather than destabilise outputs---a prediction we test directly through the history/no-history manipulation \citep{bennatan2026sycophant, chang2026internal}.
 
 
 % ============================================================
@@ -148,7 +134,7 @@ Commitment level $C \in \{0,1,2,3,4\}$ is operationalised as the numeric index o
 
 \subsection{Models}
 
-We evaluate three publicly available instruction-tuned models under deterministic decoding (temperature $= 0$): Llama~3.1-8B-Instruct \citep{LLAMA31}, Gemma~2-9B-IT \citep{GEMMA2}, and Qwen3-8B \citep{QWEN3}. Deterministic decoding is used to ensure reproducibility; inter-run agreement was confirmed to be 100\% across 3,438 step comparisons. All models were loaded with 4-bit quantisation and evaluated on a single A10 GPU (24\,GB VRAM).
+We evaluate three publicly available instruction-tuned models under deterministic decoding (temperature $= 0$): Llama~3.1-8B-Instruct \citep{dubey2024llama}, Gemma~2-9B-IT \citep{gemmateam2024gemma}, and Qwen3-8B \citep{qwenteam2025qwen3}. Deterministic decoding is used to ensure reproducibility; inter-run agreement was confirmed to be 100\% across 3,438 step comparisons. All models were loaded with 4-bit quantisation and evaluated on a single A10 GPU (24\,GB VRAM).
 
 \subsection{Scenarios and Domains}
 
