@@ -5,3 +5,5 @@ __pycache__/
 
 # Raw model output — large, regenerable from scripts + config
 data/generations.jsonl
+
+paper/references/
